@@ -421,6 +421,30 @@ body {
   margin-bottom: 8px;
 }
 
+/* Download App Button */
+.download-btn {
+  background: linear-gradient(45deg, #25D366, #128C7E);
+  color: white;
+  text-align: center;
+  padding: 14px;
+  border-radius: 30px;
+  margin: 15px 0;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: none;
+  width: 100%;
+  transition: transform 0.2s;
+}
+
+.download-btn:active {
+  transform: scale(0.98);
+}
+
 /* Pages */
 .page {
   display: none;
@@ -589,7 +613,7 @@ body {
   padding: 6px;
   background: linear-gradient(45deg, #ff0000, #cc0000);
   border: none;
-  boder-radius: 6px;
+  border-radius: 6px;
   color: white;
   font-weight: bold;
   font-size: 11px;
@@ -944,6 +968,24 @@ body {
   font-weight: bold;
 }
 
+/* Floating Download Button */
+.floating-download {
+  position: fixed;
+  bottom: 90px;
+  left: 10px;
+  background: linear-gradient(45deg, #25D366, #128C7E);
+  padding: 10px 15px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 999;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
 @media (max-width: 480px) {
   .movies-grid {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -987,6 +1029,11 @@ body {
   </div>
 </div>
 
+<!-- Floating Download Button -->
+<div class="floating-download" onclick="downloadApp()">
+  📲 Download App
+</div>
+
 <!-- Ad Counter Badge -->
 <div class="ad-counter" id="adCounter">🎬 Ready to Watch</div>
 
@@ -1016,6 +1063,11 @@ body {
     <div class="divider">or</div>
     
     <button class="btn-secondary" onclick="showSignup()">Create New Account</button>
+    
+    <!-- Download Button on Login Page -->
+    <button class="download-btn" onclick="downloadApp()">
+      📲 Download Viniflix App
+    </button>
   </div>
 </div>
 
@@ -1209,6 +1261,11 @@ body {
     <button class="btn-secondary" onclick="redeemInvite()" style="margin-top: 15px; width: 100%;">
       🔄 Use Someone's Code
     </button>
+    
+    <!-- Download Button on Earn Page -->
+    <button class="download-btn" onclick="downloadApp()" style="margin-top: 15px;">
+      📲 Download Viniflix App
+    </button>
   </div>
 </div>
 
@@ -1309,6 +1366,17 @@ setPersistence(auth, browserLocalPersistence)
   .then(() => console.log("✅ Firebase persistence set to LOCAL"))
   .catch((e) => console.error("Persistence error:", e));
 
+// ===========================================
+// ✅ APK DOWNLOAD LINK - WORKING
+// ===========================================
+const APK_DOWNLOAD_URL = "https://drive.google.com/file/d/1HOnPhk-Aefsx6eIwDkv8L7PF_fWhiJ3H/view?usp=drivesdk";
+
+// Download App Function
+window.downloadApp = function() {
+  showToast("📲 Downloading Viniflix App...", false);
+  window.open(APK_DOWNLOAD_URL, '_blank');
+};
+
 // DOM Elements
 const emailInput = document.getElementById("emailInput");
 const passwordInput = document.getElementById("passwordInput");
@@ -1328,8 +1396,6 @@ let currentPage = 1;
 let isLoading = false;
 let hasMore = true;
 const MOVIES_PER_PAGE = 20;
-
-// Variables for ad system
 let pendingMovieLink = null;
 let pendingMovieTitle = null;
 let isAdPlaying = false;
@@ -2096,6 +2162,7 @@ document.getElementById('carouselNext')?.addEventListener('click', () => nextSli
 // Initialize
 createSpinWheel();
 
+// Auth state listener - User stays logged in after refresh
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     document.getElementById("loginPage").style.display = "none";
